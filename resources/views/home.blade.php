@@ -15,6 +15,14 @@
                     @endif
 
                     You are logged in!
+                    <div>
+                        Your Leagues
+                        @each('view.name', $leagues, 'league')
+                    </div>
+                    <div>
+                        Your Decks
+                        @each('view.name', $decks, 'deck')
+                    </div>
                 </div>
             </div>
         </div>
