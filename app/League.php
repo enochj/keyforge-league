@@ -25,7 +25,7 @@ class League extends Model
         $model = new App\League;
         foreach ($fillable as $attribute)
         {
-            if isset($request[$attribute]) {
+            if (isset($request[$attribute])) {
                 $model->where($attribute, $request[$attribute]);
             }
         }

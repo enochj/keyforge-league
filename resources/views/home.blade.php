@@ -18,10 +18,12 @@
                     <div>
                         Your Leagues
                         @each('view.name', $leagues, 'league')
+                        <button @click="add-league">Add a League</button>
                     </div>
                     <div>
                         Your Decks
                         @each('view.name', $decks, 'deck')
+                        <button @click="add-deck">Add a Deck</button>
                     </div>
                 </div>
             </div>
