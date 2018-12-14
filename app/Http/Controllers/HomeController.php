@@ -25,7 +25,7 @@ class HomeController extends Controller
     public function index()
     {
         $player = Auth::user()->player()->with('leagues')->with('decks')->get();
-        dd($player->toArray());
+        // dd($player->toArray());
         $id = Auth::id();
         $leagues = array();
         $decks = array();

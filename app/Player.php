@@ -9,6 +9,8 @@ class Player extends Model
 {
     use SoftDeletes;
 
+    protected $fillable = ['user_id'];
+
     public function leagues()
     {
         return $this->belongsToMany('App\League');
