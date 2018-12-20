@@ -19,7 +19,7 @@ class LeagueController extends Controller
         // Set some options - we are passing in a useragent too here
         curl_setopt_array($curl, array(
             CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_URL => 'http://www.keyforgegame.com/api/players/?page=1&page_size=10',
+            CURLOPT_URL => 'http://www.keyforgegame.com/api/decks/?page=1&page_size=10&search=frau',
         ));
         // Send the request & save response to $resp
         $resp = curl_exec($curl);
