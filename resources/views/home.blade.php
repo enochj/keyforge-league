@@ -14,14 +14,14 @@
                         </div>
                     @endif
 
-                    You are logged in!
+                    I am logged in!
                     <div>
-                        Your Leagues
+                        My Leagues
                         @each('view.name', $leagues, 'league')
                         <button @click="add-league">Add a League</button>
                     </div>
                     <div>
-                        Your Decks
+                        My Decks
                         @each('view.name', $decks, 'deck')
                         <button @click="add-deck">Add a Deck</button>
                     </div>
