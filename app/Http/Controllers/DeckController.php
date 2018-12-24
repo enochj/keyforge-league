@@ -98,13 +98,12 @@ class DeckController extends Controller
 
     public function findDecks(Request $request)
     {
-        $search_string = $this->curl_url.'?page=1&page_size=10&';
+        $search_string = $this->curl_url.'?page=1&page_size=10&search=';
         if ($request->name) {
-            foreach(explode(" ", trim($request->name)) as $search) {
-                $search_string .= 'search='.$search.'&';
-            }
+            $search_string.=rawurlencode($request->name);
+        } else {
+            return;
         }
-        $search_string = rtrim($search_string, '&');
 
         // Get cURL resource
         $curl = curl_init();
@@ -118,6 +117,7 @@ class DeckController extends Controller
         // Close request to clear up some resources
         curl_close($curl);
         echo($resp);
+        echo($search_string);
         return;
     }
 }
