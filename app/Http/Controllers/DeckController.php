@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Player;
+use App\Deck;
 use Illuminate\Http\Request;
 
-class PlayerController extends Controller
+class DeckController extends Controller
 {
+    protected $curl_url;
+
     /**
      * Create a new controller instance.
      *
@@ -15,6 +17,7 @@ class PlayerController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->curl_url = 'http://www.keyforgegame.com/api/decks/';
     }
 
     /**
@@ -24,7 +27,7 @@ class PlayerController extends Controller
      */
     public function index()
     {
-        return view('player.index');
+        //
     }
 
     /**
@@ -34,7 +37,7 @@ class PlayerController extends Controller
      */
     public function create()
     {
-        //
+        return view('deck.create');
     }
 
     /**
@@ -51,10 +54,10 @@ class PlayerController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Player  $player
+     * @param  \App\Deck  $deck
      * @return \Illuminate\Http\Response
      */
-    public function show(Player $player)
+    public function show(Deck $deck)
     {
         //
     }
@@ -62,10 +65,10 @@ class PlayerController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Player  $player
+     * @param  \App\Deck  $deck
      * @return \Illuminate\Http\Response
      */
-    public function edit(Player $player)
+    public function edit(Deck $deck)
     {
         //
     }
@@ -74,10 +77,10 @@ class PlayerController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Player  $player
+     * @param  \App\Deck  $deck
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Player $player)
+    public function update(Request $request, Deck $deck)
     {
         //
     }
@@ -85,11 +88,36 @@ class PlayerController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Player  $player
+     * @param  \App\Deck  $deck
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Player $player)
+    public function destroy(Deck $deck)
     {
         //
+    }
+
+    public function findDecks(Request $request)
+    {
+        $search_string = $this->curl_url.'?page=1&page_size=10&';
+        if ($request->name) {
+            foreach(explode(" ", trim($request->name)) as $search) {
+                $search_string .= 'search='.$search.'&';
+            }
+        }
+        $search_string = rtrim($search_string, '&');
+
+        // Get cURL resource
+        $curl = curl_init();
+        // Set some options - we are passing in a useragent too here
+        curl_setopt_array($curl, array(
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_URL => $search_string,
+        ));
+        // Send the request & save response to $resp
+        $resp = curl_exec($curl);
+        // Close request to clear up some resources
+        curl_close($curl);
+        echo($resp);
+        return;
     }
 }
