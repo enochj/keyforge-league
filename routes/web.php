@@ -20,6 +20,8 @@ Auth::routes();
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/player', 'PlayerController@index')->name('player');
 Route::get('/add', 'DeckController@create')->name('create-deck');
+Route::get('/decks/find-decks', 'DeckController@findDecks')
+    ->name('find-decks');
 
 Route::resources([
     'leagues' => 'LeagueController',

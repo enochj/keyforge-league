@@ -1826,12 +1826,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1871,6 +1865,13 @@ __webpack_require__.r(__webpack_exports__);
     },
     createDeck: function createDeck() {
       console.log("you're doing it peter!");
+    },
+    findDeck: function findDeck($deckName) {
+      console.log($deckName);
+      axios.get('decks/find-decks?name=' + $deckName).then(function (_ref3) {
+        var data = _ref3.data;
+        console.log(data);
+      });
     }
   }
 });
@@ -36713,27 +36714,18 @@ var render = function() {
                                       "button",
                                       {
                                         staticClass: "btn btn-primary",
-                                        attrs: { type: "button" }
+                                        attrs: {
+                                          disabled: !_vm.deck.name,
+                                          type: "button",
+                                          id: "find-button"
+                                        },
+                                        on: {
+                                          click: function($event) {
+                                            _vm.findDeck(_vm.deck.name)
+                                          }
+                                        }
                                       },
-                                      [_vm._v("Save changes")]
-                                    )
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "form-group" }, [
-                                    _c(
-                                      "div",
-                                      { staticClass: "col-md-12 text-right" },
-                                      [
-                                        _c(
-                                          "button",
-                                          {
-                                            staticClass:
-                                              "btn btn-primary btn-lg",
-                                            attrs: { type: "submit" }
-                                          },
-                                          [_vm._v("Submit")]
-                                        )
-                                      ]
+                                      [_vm._v("Find Deck")]
                                     )
                                   ])
                                 ])

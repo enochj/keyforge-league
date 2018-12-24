@@ -35,7 +35,7 @@
 
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" @click="showModal = false">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
+                        <button :disabled="!deck.name" type="button" class="btn btn-primary" id="find-button" @click="findDeck(deck.name)">Find Deck</button>
                       </div>
 
                       <!--div class="form-group">
@@ -49,12 +49,6 @@
                           <span v-if="errors.body" class="help-block text-danger">{{ errors.body[0] }}</span>
                         </div>
                       </div-->
-
-                      <div class="form-group">
-                        <div class="col-md-12 text-right">
-                          <button type="submit" class="btn btn-primary btn-lg">Submit</button>
-                        </div>
-                      </div>
                     </fieldset>
                   </form>
                 </div>
@@ -106,6 +100,13 @@
 
       createDeck() {
         console.log("you're doing it peter!");
+      },
+
+      findDeck($deckName) {
+        console.log($deckName);
+        axios.get('decks/find-decks?name='+$deckName).then(({data}) => {
+          console.log(data);
+        });
       }
     }
   }
