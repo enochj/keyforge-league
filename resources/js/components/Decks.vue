@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="alert alert-warning" v-if="decks !== null">
-            I have no decks. Click 'Add' to begin.
+            I have no decks. The 'Add' button will begin the process.
         </div>
         <div class="panel panel-default" v-for="deck in decks">
             <div class="panel-heading">

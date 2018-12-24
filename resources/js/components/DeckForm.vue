@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button class="btn" @click="showModal=true">Add</button>
+    <button class="btn" @click="showModal=true" style="margin-bottom:1rem">Add</button>
     <div class="alert alert-success" v-if="saved">
       <strong>Success!</strong> Your deck has been added successfully.
     </div>
@@ -31,6 +31,12 @@
                                class="form-control">
                           <span v-if="errors.name" class="help-block text-danger">{{ errors.name[0] }}</span>
                         </div>
+                      </div>
+
+                      <div class="form-group col-md-9"
+                        v-for="deck in foundDecks"
+                        :key="deck.id">
+                        <button class ="btn" @click="onSubmit(deck)">{{deck.name}}</button>
                       </div>
 
                       <div class="modal-footer">
@@ -71,16 +77,25 @@
         deck: {
           name: null,
         },
-        showModal: false
+        showModal: false,
+        foundDecks: []
       };
     },
 
     methods: {
-      onSubmit() {
+      onSubmit($deck) {
+        if ($deck instanceof(Event)) {
+          //console.log($deck);
+          this.findDeck($deck.target.name.value);
+          return false;
+        }
         this.saved = false;
 
-        axios.post('api/decks', this.deck)
-          .then(({data}) => this.setSuccessMessage())
+        axios.post('decks', $deck)
+          .then(({data}) => {
+          console.log(data);
+          this.setSuccessMessage()
+          })
           .catch(({response}) => this.setErrors(response));
       },
 
@@ -91,6 +106,7 @@
       setSuccessMessage() {
         this.reset();
         this.saved = true;
+        this.showModal = false;
       },
 
       reset() {
@@ -103,9 +119,8 @@
       },
 
       findDeck($deckName) {
-        console.log($deckName);
         axios.get('decks/find-decks?name='+$deckName).then(({data}) => {
-          console.log(data);
+          this.foundDecks = data.data;
         });
       }
     }

@@ -15,6 +15,8 @@ class CreateDecksTable extends Migration
     {
         Schema::create('decks', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('kf_id');
+            $table->string('name');
             $table->integer('player_id');
             $table->timestamps();
         });
