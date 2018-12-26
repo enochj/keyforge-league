@@ -1848,6 +1848,8 @@ __webpack_require__.r(__webpack_exports__);
     onSubmit: function onSubmit($deck) {
       var _this = this;
 
+      this.errors = [];
+
       if ($deck instanceof Event) {
         //console.log($deck);
         this.findDeck($deck.target.name.value);
@@ -1873,8 +1875,13 @@ __webpack_require__.r(__webpack_exports__);
       this.saved = true;
       this.showModal = false;
     },
+    closeModal: function closeModal() {
+      this.showModal = false;
+      this.reset();
+    },
     reset: function reset() {
       this.errors = [];
+      this.foundDecks = [];
       this.deck = {
         name: null
       };
@@ -36640,7 +36647,7 @@ var render = function() {
                                               attrs: { "aria-hidden": "true" },
                                               on: {
                                                 click: function($event) {
-                                                  _vm.showModal = false
+                                                  _vm.closeModal()
                                                 }
                                               }
                                             },
@@ -36749,7 +36756,7 @@ var render = function() {
                                           attrs: { type: "button" },
                                           on: {
                                             click: function($event) {
-                                              _vm.showModal = false
+                                              _vm.closeModal()
                                             }
                                           }
                                         },

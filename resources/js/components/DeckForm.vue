@@ -17,7 +17,7 @@
                       <div class="modal-header">
                         <legend class="text-center">Add a Deck</legend>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true" @click="showModal = false">&times;</span>
+                        <span aria-hidden="true" @click="closeModal()">&times;</span>
                         </button>
                       </div>
 
@@ -40,7 +40,7 @@
                       </div>
 
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" @click="showModal = false">Close</button>
+                        <button type="button" class="btn btn-secondary" @click="closeModal()">Close</button>
                         <button :disabled="!deck.name" type="button" class="btn btn-primary" id="find-button" @click="findDeck(deck.name)">Find Deck</button>
                       </div>
 
@@ -84,6 +84,7 @@
 
     methods: {
       onSubmit($deck) {
+        this.errors= [];
         if ($deck instanceof(Event)) {
           //console.log($deck);
           this.findDeck($deck.target.name.value);
@@ -109,8 +110,14 @@
         this.showModal = false;
       },
 
+      closeModal() {
+        this.showModal = false;
+        this.reset();
+      },
+
       reset() {
         this.errors = [];
+        this.foundDecks = [];
         this.deck = {name: null};
       },
 
