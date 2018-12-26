@@ -32,11 +32,15 @@
                           <span v-if="errors.name" class="help-block text-danger">{{ errors.name[0] }}</span>
                         </div>
                       </div>
-
-                      <div class="form-group col-md-9"
-                        v-for="deck in foundDecks"
-                        :key="deck.id">
-                        <button class ="btn" @click="onSubmit(deck)">{{deck.name}}</button>
+                      <div v-if="searching" class="form-group col-md-9">
+                        Searching...
+                      </div>
+                      <div v-else>
+                        <div class="form-group col-md-9"
+                          v-for="deck in foundDecks"
+                          :key="deck.id">
+                          <button class ="btn" @click="onSubmit(deck)">{{deck.name}}</button>
+                        </div>
                       </div>
 
                       <div class="modal-footer">
@@ -80,6 +84,7 @@
         },
         showModal: false,
         foundDecks: [],
+        searching: false
       };
     },
 
@@ -131,7 +136,9 @@
       },
 
       findDeck($deckName) {
+        this.searching = true;
         axios.get('decks/find-decks?name='+$deckName).then(({data}) => {
+          this.searching = false;
           this.foundDecks = data.data;
         });
       }
