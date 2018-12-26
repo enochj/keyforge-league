@@ -6,7 +6,6 @@
             <div class="col-md-12">
                 My Decks
                 <decks></decks>
-                <deck-form></deck-form>
             </div>
         </div>
     </div>

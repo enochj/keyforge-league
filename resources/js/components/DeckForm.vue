@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button class="btn" @click="showModal=true" style="margin-bottom:1rem">Add</button>
+    <button class="btn" @click="addButton()" style="margin-bottom:1rem">Add</button>
     <div class="alert alert-success" v-if="saved">
       <strong>Success!</strong> Your deck has been added successfully.
     </div>
@@ -69,6 +69,7 @@
 
 <script>
   export default {
+    props: ['saved'],
 
     data() {
       return {
@@ -78,15 +79,19 @@
           name: null,
         },
         showModal: false,
-        foundDecks: []
+        foundDecks: [],
       };
     },
 
     methods: {
+      addButton() {
+        this.showModal = true;
+        this.saved = false;
+      },
+
       onSubmit($deck) {
         this.errors= [];
         if ($deck instanceof(Event)) {
-          //console.log($deck);
           this.findDeck($deck.target.name.value);
           return false;
         }
@@ -94,8 +99,8 @@
 
         axios.post('decks', $deck)
           .then(({data}) => {
-          console.log(data);
-          this.setSuccessMessage()
+            this.setSuccessMessage();
+            this.$emit('added');
           })
           .catch(({response}) => this.setErrors(response));
       },

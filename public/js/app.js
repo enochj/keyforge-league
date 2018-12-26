@@ -1833,6 +1833,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
+  props: ['saved'],
   data: function data() {
     return {
       errors: [],
@@ -1845,13 +1846,16 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    addButton: function addButton() {
+      this.showModal = true;
+      this.saved = false;
+    },
     onSubmit: function onSubmit($deck) {
       var _this = this;
 
       this.errors = [];
 
       if ($deck instanceof Event) {
-        //console.log($deck);
         this.findDeck($deck.target.name.value);
         return false;
       }
@@ -1859,9 +1863,10 @@ __webpack_require__.r(__webpack_exports__);
       this.saved = false;
       axios.post('decks', $deck).then(function (_ref) {
         var data = _ref.data;
-        console.log(data);
 
         _this.setSuccessMessage();
+
+        _this.$emit('added');
       }).catch(function (_ref2) {
         var response = _ref2.response;
         return _this.setErrors(response);
@@ -1938,22 +1943,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      alert: 'Loading',
       decks: [],
       pageCount: 1,
-      endpoint: 'decks?page='
+      endpoint: 'decks'
     };
   },
+  watch: {
+    decks: function decks(val, oldval) {
+      if (val.length == 0) {
+        this.alert = "I have no decks. The 'Add' button will begin the process";
+      } else {
+        this.alert = '';
+      }
+    }
+  },
   created: function created() {
+    console.log('fetching');
     this.fetch();
   },
   methods: {
@@ -1961,10 +1970,14 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      axios.get(this.endpoint + page).then(function (_ref) {
+      axios.get(this.endpoint + '?page=' + page).then(function (_ref) {
         var data = _ref.data;
-        _this.decks = data.data; //this.pageCount = data.meta.last_page;
+        _this.decks = data; //this.pageCount = data.meta.last_page;
       });
+    },
+    added: function added() {
+      this.saved = true;
+      this.fetch();
     },
     report: function report(id) {
       var _this2 = this;
@@ -1976,8 +1989,17 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     removeDeck: function removeDeck(id) {
-      this.decks = _.remove(this.decks, function (deck) {
-        return deck.id !== id;
+      var _this3 = this;
+
+      axios.delete(this.endpoint + '/' + id).then(function (_ref2) {
+        var data = _ref2.data;
+
+        if (data) {
+          _this3.saved = false;
+          _this3.decks = _.remove(_this3.decks, function (deck) {
+            return deck.id !== id;
+          });
+        }
       });
     },
     createDeck: function createDeck() {
@@ -36571,7 +36593,7 @@ var render = function() {
         staticStyle: { "margin-bottom": "1rem" },
         on: {
           click: function($event) {
-            _vm.showModal = true
+            _vm.addButton()
           }
         }
       },
@@ -36825,62 +36847,50 @@ var render = function() {
   return _c(
     "div",
     [
-      _vm.decks !== null
+      _vm.alert.length > 0
         ? _c("div", { staticClass: "alert alert-warning" }, [
-            _vm._v(
-              "\n        I have no decks. The 'Add' button will begin the process.\n    "
-            )
+            _vm._v("\n        " + _vm._s(_vm.alert) + "\n    ")
           ])
         : _vm._e(),
       _vm._v(" "),
       _vm._l(_vm.decks, function(deck) {
-        return _c("div", { staticClass: "panel panel-default" }, [
-          _c("div", { staticClass: "panel-heading" }, [
-            _c("span", {
-              staticClass: "glyphicon glyphicon-user",
-              attrs: { id: "start" }
-            }),
+        return _c(
+          "div",
+          {
+            staticClass: "panel panel-default",
+            on: {
+              added: function($event) {
+                _vm.goagain()
+              }
+            }
+          },
+          [
+            _c("div", { staticClass: "panel-heading" }),
             _vm._v(" "),
-            _c("label", { attrs: { id: "started" } }, [_vm._v("By")]),
-            _vm._v(" " + _vm._s(deck.name) + "\n        ")
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "panel-body" }, [
-            _c("div", { staticClass: "col-md-2" }, [
-              _c("div", { staticClass: "thumbnail" }, [
-                _c("img", { attrs: { src: deck.avatar, alt: deck.name } })
+            _c("div", { staticClass: "panel-body" }, [
+              _c("div", { staticClass: "col-md-6" }, [
+                _vm._v("\n                " + _vm._s(deck.name) + " | "),
+                _c(
+                  "a",
+                  {
+                    attrs: { href: "javascript:void(0);", id: "remove" },
+                    on: {
+                      click: function($event) {
+                        _vm.removeDeck(deck.id)
+                      }
+                    }
+                  },
+                  [_vm._v("Remove")]
+                )
               ])
             ]),
             _vm._v(" "),
-            _c("p", [_vm._v(_vm._s(deck.body))])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "panel-footer" }, [
-            _c("span", {
-              staticClass: "glyphicon glyphicon-calendar",
-              attrs: { id: "visit" }
-            }),
-            _vm._v(" " + _vm._s(deck.updated_at) + " |\n            "),
-            _c("span", {
-              staticClass: "glyphicon glyphicon-flag",
-              attrs: { id: "comment" }
-            }),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                attrs: { href: "#", id: "remove" },
-                on: {
-                  click: function($event) {
-                    _vm.remove(deck.id)
-                  }
-                }
-              },
-              [_vm._v("Remove")]
-            )
-          ])
-        ])
-      })
+            _c("div", { staticClass: "panel-footer" })
+          ]
+        )
+      }),
+      _vm._v(" "),
+      _c("deck-form", { attrs: { saved: _vm.saved }, on: { added: _vm.added } })
     ],
     2
   )

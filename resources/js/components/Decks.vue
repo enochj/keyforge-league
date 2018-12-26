@@ -1,25 +1,17 @@
 <template>
     <div>
-        <div class="alert alert-warning" v-if="decks !== null">
-            I have no decks. The 'Add' button will begin the process.
+        <div class="alert alert-warning" v-if="alert.length > 0">
+            {{alert}}
         </div>
-        <div class="panel panel-default" v-for="deck in decks">
+        <div class="panel panel-default" @added="goagain()" v-for="deck in decks">
             <div class="panel-heading">
-                <span class="glyphicon glyphicon-user" id="start"></span>
-                <label id="started">By</label> {{ deck.name }}
             </div>
             <div class="panel-body">
-                <div class="col-md-2">
-                    <div class="thumbnail">
-                        <img :src="deck.avatar" :alt="deck.name">
-                    </div>
+                <div class="col-md-6">
+                    {{deck.name }} | <a href="javascript:void(0);" id="remove" @click="removeDeck(deck.id)">Remove</a>
                 </div>
-                <p>{{ deck.body }}</p>
             </div>
             <div class="panel-footer">
-                <span class="glyphicon glyphicon-calendar" id="visit"></span> {{ deck.updated_at }} |
-                <span class="glyphicon glyphicon-flag" id="comment"></span>
-                <a href="#" id="remove" @click="remove(deck.id)">Remove</a>
             </div>
         </div>
         <!--paginate
@@ -29,6 +21,7 @@
                 :next-text="'Next'"
                 :container-class="'pagination'">
         </paginate-->
+        <deck-form v-on:added="added" :saved="saved"></deck-form>
     </div>
 </template>
 
@@ -37,23 +30,41 @@
 
         data() {
             return {
+                alert: 'Loading',
                 decks: [],
                 pageCount: 1,
-                endpoint: 'decks?page='
+                endpoint: 'decks',
             };
         },
 
+        watch: {
+            decks: function (val, oldval) {
+                if (val.length == 0) {
+                    this.alert = "I have no decks. The 'Add' button will begin the process";
+                } else {
+                    this.alert = '';
+                }
+            },
+        },
+
         created() {
+            console.log('fetching');
             this.fetch();
         },
 
+
         methods: {
             fetch(page = 1) {
-                axios.get(this.endpoint + page)
+                axios.get(this.endpoint +'?page='+ page)
                     .then(({data}) => {
-                        this.decks = data.data;
+                        this.decks = data;
                         //this.pageCount = data.meta.last_page;
                     });
+            },
+
+            added() {
+                this.saved = true;
+                this.fetch();
             },
 
             report(id) {
@@ -64,9 +75,15 @@
             },
 
             removeDeck(id) {
-                this.decks = _.remove(this.decks, function (deck) {
-                    return deck.id !== id;
-                });
+                axios.delete(this.endpoint+'/'+id)
+                    .then(({data}) => {
+                        if (data) {
+                            this.saved = false;
+                            this.decks = _.remove(this.decks, function (deck) {
+                                return deck.id !== id;
+                            });
+                        }
+                    });
             },
 
             createDeck() {
