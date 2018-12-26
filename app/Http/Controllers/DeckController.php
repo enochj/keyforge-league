@@ -50,7 +50,7 @@ class DeckController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'kf_id' => 'bail|required|unique:decks',
+            'id' => 'bail|required|unique:decks,kf_id',
             'name' => 'bail|required|unique:decks'
         ]);
         // TODO implement a validator
@@ -134,7 +134,6 @@ class DeckController extends Controller
         // Close request to clear up some resources
         curl_close($curl);
         echo($resp);
-        echo($search_string);
         return;
     }
 }
