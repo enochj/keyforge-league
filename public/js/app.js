@@ -1904,7 +1904,7 @@ __webpack_require__.r(__webpack_exports__);
         _this2.searching = false;
         _this2.foundDecks = data.data;
 
-        if (_this2.foundDecks.length == 3) {
+        if (_this2.foundDecks.length == 6) {
           console.log('heyooo');
           _this2.errors = {
             'name': ['The number of results is more than the number displayed.'],
@@ -36788,13 +36788,7 @@ var render = function() {
                                                         }
                                                       }
                                                     },
-                                                    [
-                                                      _vm._v(
-                                                        _vm._s(deck.name) +
-                                                          _vm._s(index) +
-                                                          "f"
-                                                      )
-                                                    ]
+                                                    [_vm._v(_vm._s(deck.name))]
                                                   )
                                                 : _vm._e()
                                             ]

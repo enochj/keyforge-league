@@ -39,7 +39,7 @@
                         <div class="form-group col-md-9"
                           v-for="(deck, index) in foundDecks"
                           :key="deck.id">
-                          <button v-if="index != 5" class ="btn" @click="addDeck(deck)">{{deck.name}}{{index}}f</button>
+                          <button v-if="index != 5" class ="btn" @click="addDeck(deck)">{{deck.name}}</button>
                         </div>
                       </div>
 
@@ -138,7 +138,7 @@
         axios.get('decks/find-decks?name='+$deckName).then(({data}) => {
           this.searching = false;
           this.foundDecks = data.data;
-          if (this.foundDecks.length == 3) {
+          if (this.foundDecks.length == 6) {
             console.log('heyooo');
             this.errors = {
               'name' : ['The number of results is more than the number displayed.'],
