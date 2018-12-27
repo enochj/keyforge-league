@@ -39,7 +39,7 @@
                         <div class="form-group col-md-9"
                           v-for="(deck, index) in foundDecks"
                           :key="deck.id">
-                          <button v-if="index != 5" class ="btn" @click="addDeck(deck)">{{deck.name}}{{index}}</button>
+                          <button v-if="index != 5" class ="btn" @click="addDeck(deck)">{{deck.name}}{{index}}f</button>
                         </div>
                       </div>
 
