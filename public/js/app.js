@@ -36788,7 +36788,12 @@ var render = function() {
                                                         }
                                                       }
                                                     },
-                                                    [_vm._v(_vm._s(deck.name))]
+                                                    [
+                                                      _vm._v(
+                                                        _vm._s(deck.name) +
+                                                          _vm._s(index)
+                                                      )
+                                                    ]
                                                   )
                                                 : _vm._e()
                                             ]
