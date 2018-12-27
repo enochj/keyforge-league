@@ -1912,6 +1912,11 @@ __webpack_require__.r(__webpack_exports__);
             'name': ['The number of results is more than the number displayed.'],
             'id': ['The number of results is more than the number displayed.']
           };
+        } else if (_this2.foundDecks.length == 0) {
+          _this2.errors = {
+            'name': ['No results were found.'],
+            'id': ['No results were found.']
+          };
         }
       });
     }
