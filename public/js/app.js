@@ -1846,7 +1846,8 @@ __webpack_require__.r(__webpack_exports__);
       },
       showModal: false,
       foundDecks: [],
-      searching: false
+      searching: false,
+      exceeded: false
     };
   },
   methods: {
@@ -1902,6 +1903,14 @@ __webpack_require__.r(__webpack_exports__);
         var data = _ref3.data;
         _this2.searching = false;
         _this2.foundDecks = data.data;
+
+        if (_this2.foundDecks.length == 3) {
+          console.log('heyooo');
+          _this2.errors = {
+            'name': ['The number of results is more than the number displayed.'],
+            'id': ['The number of results is more than the number displayed.']
+          };
+        }
       });
     }
   }
@@ -36755,7 +36764,10 @@ var render = function() {
                                       )
                                     : _c(
                                         "div",
-                                        _vm._l(_vm.foundDecks, function(deck) {
+                                        _vm._l(_vm.foundDecks, function(
+                                          deck,
+                                          index
+                                        ) {
                                           return _c(
                                             "div",
                                             {
@@ -36763,18 +36775,22 @@ var render = function() {
                                               staticClass: "form-group col-md-9"
                                             },
                                             [
-                                              _c(
-                                                "button",
-                                                {
-                                                  staticClass: "btn",
-                                                  on: {
-                                                    click: function($event) {
-                                                      _vm.addDeck(deck)
-                                                    }
-                                                  }
-                                                },
-                                                [_vm._v(_vm._s(deck.name))]
-                                              )
+                                              index != 5
+                                                ? _c(
+                                                    "button",
+                                                    {
+                                                      staticClass: "btn",
+                                                      on: {
+                                                        click: function(
+                                                          $event
+                                                        ) {
+                                                          _vm.addDeck(deck)
+                                                        }
+                                                      }
+                                                    },
+                                                    [_vm._v(_vm._s(deck.name))]
+                                                  )
+                                                : _vm._e()
                                             ]
                                           )
                                         }),
