@@ -48,7 +48,6 @@
         },
 
         created() {
-            console.log('fetching');
             this.fetch();
         },
 

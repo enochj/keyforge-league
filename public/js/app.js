@@ -1836,6 +1836,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -1899,13 +1901,13 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       this.searching = true;
+      this.errors = [];
       axios.get('decks/find-decks?name=' + $deckName).then(function (_ref3) {
         var data = _ref3.data;
         _this2.searching = false;
         _this2.foundDecks = data.data;
 
         if (_this2.foundDecks.length == 6) {
-          console.log('heyooo');
           _this2.errors = {
             'name': ['The number of results is more than the number displayed.'],
             'id': ['The number of results is more than the number displayed.']
@@ -1973,7 +1975,6 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   created: function created() {
-    console.log('fetching');
     this.fetch();
   },
   methods: {
@@ -36644,12 +36645,7 @@ var render = function() {
                               "form",
                               {
                                 staticClass: "form-horizontal",
-                                attrs: { method: "post" },
-                                on: {
-                                  submit: function($event) {
-                                    $event.preventDefault()
-                                  }
-                                }
+                                attrs: { method: "post" }
                               },
                               [
                                 _c("fieldset", [
@@ -36685,154 +36681,160 @@ var render = function() {
                                         )
                                       ]
                                     )
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "form-group" }, [
-                                    _c(
-                                      "label",
+                                  ])
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c(
+                                "label",
+                                {
+                                  staticClass: "col-md-3 control-label",
+                                  attrs: { for: "name" }
+                                },
+                                [_vm._v("Name")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass: "col-md-9",
+                                  class: { "has-error": _vm.errors.name }
+                                },
+                                [
+                                  _c("input", {
+                                    directives: [
                                       {
-                                        staticClass: "col-md-3 control-label",
-                                        attrs: { for: "name" }
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.deck.name,
+                                        expression: "deck.name"
                                       },
-                                      [_vm._v("Name")]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
+                                      { name: "focus", rawName: "v-focus" }
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: {
+                                      id: "name",
+                                      type: "text",
+                                      placeholder: "Deck name"
+                                    },
+                                    domProps: { value: _vm.deck.name },
+                                    on: {
+                                      keyup: function($event) {
+                                        if (
+                                          !("button" in $event) &&
+                                          _vm._k(
+                                            $event.keyCode,
+                                            "enter",
+                                            13,
+                                            $event.key,
+                                            "Enter"
+                                          )
+                                        ) {
+                                          return null
+                                        }
+                                        _vm.findDeck(_vm.deck.name)
+                                      },
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.deck,
+                                          "name",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _vm.errors.name
+                                    ? _c(
+                                        "span",
+                                        {
+                                          staticClass: "help-block text-danger"
+                                        },
+                                        [_vm._v(_vm._s(_vm.errors.name[0]))]
+                                      )
+                                    : _vm._e()
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _vm.searching
+                              ? _c(
+                                  "div",
+                                  { staticClass: "form-group col-md-9" },
+                                  [
+                                    _vm._v(
+                                      "\n                      Searching...\n                    "
+                                    )
+                                  ]
+                                )
+                              : _c(
+                                  "div",
+                                  _vm._l(_vm.foundDecks, function(deck, index) {
+                                    return _c(
                                       "div",
                                       {
-                                        staticClass: "col-md-9",
-                                        class: { "has-error": _vm.errors.name }
+                                        key: deck.id,
+                                        staticClass: "form-group col-md-9"
                                       },
                                       [
-                                        _c("input", {
-                                          directives: [
-                                            {
-                                              name: "model",
-                                              rawName: "v-model",
-                                              value: _vm.deck.name,
-                                              expression: "deck.name"
-                                            }
-                                          ],
-                                          staticClass: "form-control",
-                                          attrs: {
-                                            id: "name",
-                                            type: "text",
-                                            placeholder: "Deck name"
-                                          },
-                                          domProps: { value: _vm.deck.name },
-                                          on: {
-                                            input: function($event) {
-                                              if ($event.target.composing) {
-                                                return
-                                              }
-                                              _vm.$set(
-                                                _vm.deck,
-                                                "name",
-                                                $event.target.value
-                                              )
-                                            }
-                                          }
-                                        }),
-                                        _vm._v(" "),
-                                        _vm.errors.name
+                                        index != 5
                                           ? _c(
-                                              "span",
+                                              "button",
                                               {
-                                                staticClass:
-                                                  "help-block text-danger"
+                                                staticClass: "btn",
+                                                on: {
+                                                  click: function($event) {
+                                                    _vm.addDeck(deck)
+                                                  }
+                                                }
                                               },
-                                              [
-                                                _vm._v(
-                                                  _vm._s(_vm.errors.name[0])
-                                                )
-                                              ]
+                                              [_vm._v(_vm._s(deck.name))]
                                             )
                                           : _vm._e()
                                       ]
                                     )
-                                  ]),
-                                  _vm._v(" "),
-                                  _vm.searching
-                                    ? _c(
-                                        "div",
-                                        { staticClass: "form-group col-md-9" },
-                                        [
-                                          _vm._v(
-                                            "\n                      Searching...\n                    "
-                                          )
-                                        ]
-                                      )
-                                    : _c(
-                                        "div",
-                                        _vm._l(_vm.foundDecks, function(
-                                          deck,
-                                          index
-                                        ) {
-                                          return _c(
-                                            "div",
-                                            {
-                                              key: deck.id,
-                                              staticClass: "form-group col-md-9"
-                                            },
-                                            [
-                                              index != 5
-                                                ? _c(
-                                                    "button",
-                                                    {
-                                                      staticClass: "btn",
-                                                      on: {
-                                                        click: function(
-                                                          $event
-                                                        ) {
-                                                          _vm.addDeck(deck)
-                                                        }
-                                                      }
-                                                    },
-                                                    [_vm._v(_vm._s(deck.name))]
-                                                  )
-                                                : _vm._e()
-                                            ]
-                                          )
-                                        }),
-                                        0
-                                      ),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "modal-footer" }, [
-                                    _c(
-                                      "button",
-                                      {
-                                        staticClass: "btn btn-secondary",
-                                        attrs: { type: "button" },
-                                        on: {
-                                          click: function($event) {
-                                            _vm.closeModal()
-                                          }
-                                        }
-                                      },
-                                      [_vm._v("Close")]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "button",
-                                      {
-                                        staticClass: "btn btn-primary",
-                                        attrs: {
-                                          disabled: !_vm.deck.name,
-                                          type: "button",
-                                          id: "find-button"
-                                        },
-                                        on: {
-                                          click: function($event) {
-                                            _vm.findDeck(_vm.deck.name)
-                                          }
-                                        }
-                                      },
-                                      [_vm._v("Find Deck")]
-                                    )
-                                  ])
-                                ])
-                              ]
-                            )
+                                  }),
+                                  0
+                                ),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "modal-footer" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-secondary",
+                                  attrs: { type: "button" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.closeModal()
+                                    }
+                                  }
+                                },
+                                [_vm._v("Close")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-primary",
+                                  attrs: {
+                                    disabled: !_vm.deck.name,
+                                    type: "button",
+                                    id: "find-button"
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.findDeck(_vm.deck.name)
+                                    }
+                                  }
+                                },
+                                [_vm._v("Find Deck")]
+                              )
+                            ])
                           ]
                         )
                       ])
@@ -48275,7 +48277,15 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue").default);
 Vue.component('decks', __webpack_require__(/*! ./components/Decks.vue */ "./resources/js/components/Decks.vue").default);
 Vue.component('deck-form', __webpack_require__(/*! ./components/DeckForm.vue */ "./resources/js/components/DeckForm.vue").default);
-Vue.component('paginate', __webpack_require__(/*! vuejs-paginate */ "./node_modules/vuejs-paginate/dist/index.js"));
+Vue.component('paginate', __webpack_require__(/*! vuejs-paginate */ "./node_modules/vuejs-paginate/dist/index.js")); // Register a global custom directive called `v-focus`
+
+Vue.directive('focus', {
+  // When the bound element is inserted into the DOM...
+  inserted: function inserted(el) {
+    // Focus the element
+    el.focus();
+  }
+});
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

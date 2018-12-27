@@ -12,7 +12,7 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="well well-sm" id="deck-form">
-                  <form class="form-horizontal" method="post" @submit.prevent>
+                  <form class="form-horizontal" method="post" >
                     <fieldset>
                       <div class="modal-header">
                         <legend class="text-center">Add a Deck</legend>
@@ -20,6 +20,8 @@
                         <span aria-hidden="true" @click="closeModal()">&times;</span>
                         </button>
                       </div>
+                    </fieldset>
+                  </form>
 
                       <div class="form-group">
                         <label class="col-md-3 control-label" for="name">Name</label>
@@ -27,6 +29,8 @@
                           <input id="name"
                                v-model="deck.name"
                                type="text"
+                               v-focus
+                               v-on:keyup.enter="findDeck(deck.name)"
                                placeholder="Deck name"
                                class="form-control">
                           <span v-if="errors.name" class="help-block text-danger">{{ errors.name[0] }}</span>
@@ -59,8 +63,6 @@
                           <span v-if="errors.body" class="help-block text-danger">{{ errors.body[0] }}</span>
                         </div>
                       </div-->
-                    </fieldset>
-                  </form>
                 </div>
               </div>
             </div>
@@ -135,11 +137,11 @@
 
       findDeck($deckName) {
         this.searching = true;
+        this.errors = [];
         axios.get('decks/find-decks?name='+$deckName).then(({data}) => {
           this.searching = false;
           this.foundDecks = data.data;
           if (this.foundDecks.length == 6) {
-            console.log('heyooo');
             this.errors = {
               'name' : ['The number of results is more than the number displayed.'],
               'id' : ['The number of results is more than the number displayed.']
