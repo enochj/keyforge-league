@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Deck;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Validation\Rule;
+use Validator;
 
 class DeckController extends Controller
 {
@@ -50,13 +52,16 @@ class DeckController extends Controller
      */
     public function store(Request $request)
     {
+        $player_id = Auth::user()->player()->first()->id;
+
         $validatedData = $request->validate([
-            'id' => 'bail|required|unique:decks,kf_id',
-            'name' => 'bail|required|unique:decks'
+            'id' => 'bail|required',
+            'name' => Rule::unique('decks')->where(function ($query) use ($player_id) {
+                return $query->where('player_id', $player_id);
+            })
         ]);
-        // TODO implement a validator
+
         if (isset($request->id) && isset($request->name)) {
-            $player_id = Auth::user()->player()->first()->id;
             $deck = Deck::create([
                 'player_id' => $player_id,
                 'name' => $request->name,
