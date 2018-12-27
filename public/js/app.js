@@ -1837,11 +1837,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['saved'],
   data: function data() {
     return {
-      errors: [],
       saved: false,
+      errors: [],
       deck: {
         name: null
       },
@@ -1855,18 +1854,10 @@ __webpack_require__.r(__webpack_exports__);
       this.showModal = true;
       this.saved = false;
     },
-    onSubmit: function onSubmit($deck) {
+    addDeck: function addDeck(deck) {
       var _this = this;
 
-      this.errors = [];
-
-      if ($deck instanceof Event) {
-        this.findDeck($deck.target.name.value);
-        return false;
-      }
-
-      this.saved = false;
-      axios.post('decks', $deck).then(function (_ref) {
+      axios.post('decks', deck).then(function (_ref) {
         var data = _ref.data;
 
         _this.setSuccessMessage();
@@ -1876,6 +1867,10 @@ __webpack_require__.r(__webpack_exports__);
         var response = _ref2.response;
         return _this.setErrors(response);
       });
+    },
+    onSubmit: function onSubmit() {
+      this.findDeck(deck.target.name.value);
+      return false;
     },
     setErrors: function setErrors(response) {
       this.errors = response.data.errors;
@@ -36644,7 +36639,6 @@ var render = function() {
                                 on: {
                                   submit: function($event) {
                                     $event.preventDefault()
-                                    return _vm.onSubmit($event)
                                   }
                                 }
                               },
@@ -36775,7 +36769,7 @@ var render = function() {
                                                   staticClass: "btn",
                                                   on: {
                                                     click: function($event) {
-                                                      _vm.onSubmit(deck)
+                                                      _vm.addDeck(deck)
                                                     }
                                                   }
                                                 },
@@ -36905,7 +36899,7 @@ var render = function() {
         )
       }),
       _vm._v(" "),
-      _c("deck-form", { attrs: { saved: _vm.saved }, on: { added: _vm.added } })
+      _c("deck-form", { on: { added: _vm.added } })
     ],
     2
   )

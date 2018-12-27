@@ -21,7 +21,7 @@
                 :next-text="'Next'"
                 :container-class="'pagination'">
         </paginate-->
-        <deck-form v-on:added="added" :saved="saved"></deck-form>
+        <deck-form v-on:added="added" ></deck-form>
     </div>
 </template>
 

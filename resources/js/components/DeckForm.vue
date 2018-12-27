@@ -12,7 +12,7 @@
             <div class="modal-dialog" role="document">
               <div class="modal-content">
                 <div class="well well-sm" id="deck-form">
-                  <form class="form-horizontal" method="post" @submit.prevent="onSubmit">
+                  <form class="form-horizontal" method="post" @submit.prevent>
                     <fieldset>
                       <div class="modal-header">
                         <legend class="text-center">Add a Deck</legend>
@@ -39,7 +39,7 @@
                         <div class="form-group col-md-9"
                           v-for="deck in foundDecks"
                           :key="deck.id">
-                          <button class ="btn" @click="onSubmit(deck)">{{deck.name}}</button>
+                          <button class ="btn" @click="addDeck(deck)">{{deck.name}}</button>
                         </div>
                       </div>
 
@@ -73,12 +73,11 @@
 
 <script>
   export default {
-    props: ['saved'],
 
     data() {
       return {
-        errors: [],
         saved: false,
+        errors: [],
         deck: {
           name: null,
         },
@@ -94,20 +93,18 @@
         this.saved = false;
       },
 
-      onSubmit($deck) {
-        this.errors= [];
-        if ($deck instanceof(Event)) {
-          this.findDeck($deck.target.name.value);
-          return false;
-        }
-        this.saved = false;
-
-        axios.post('decks', $deck)
+      addDeck(deck) {
+        axios.post('decks', deck)
           .then(({data}) => {
             this.setSuccessMessage();
             this.$emit('added');
           })
           .catch(({response}) => this.setErrors(response));
+      },
+
+      onSubmit() {
+        this.findDeck(deck.target.name.value);
+        return false;
       },
 
       setErrors(response) {
