@@ -1826,29 +1826,54 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
-      errors: [],
       saved: false,
+      errors: [],
       deck: {
         name: null
       },
-      showModal: false
+      showModal: false,
+      foundDecks: [],
+      searching: false,
+      exceeded: false
     };
   },
   methods: {
-    onSubmit: function onSubmit() {
+    addButton: function addButton() {
+      this.showModal = true;
+      this.saved = false;
+    },
+    addDeck: function addDeck(deck) {
       var _this = this;
 
-      this.saved = false;
-      axios.post('api/decks', this.deck).then(function (_ref) {
+      axios.post('decks', deck).then(function (_ref) {
         var data = _ref.data;
-        return _this.setSuccessMessage();
+
+        _this.setSuccessMessage();
+
+        _this.$emit('added');
       }).catch(function (_ref2) {
         var response = _ref2.response;
         return _this.setErrors(response);
       });
+    },
+    onSubmit: function onSubmit() {
+      this.findDeck(deck.target.name.value);
+      return false;
     },
     setErrors: function setErrors(response) {
       this.errors = response.data.errors;
@@ -1856,9 +1881,15 @@ __webpack_require__.r(__webpack_exports__);
     setSuccessMessage: function setSuccessMessage() {
       this.reset();
       this.saved = true;
+      this.showModal = false;
+    },
+    closeModal: function closeModal() {
+      this.showModal = false;
+      this.reset();
     },
     reset: function reset() {
       this.errors = [];
+      this.foundDecks = [];
       this.deck = {
         name: null
       };
@@ -1867,10 +1898,26 @@ __webpack_require__.r(__webpack_exports__);
       console.log("you're doing it peter!");
     },
     findDeck: function findDeck($deckName) {
-      console.log($deckName);
+      var _this2 = this;
+
+      this.searching = true;
+      this.errors = [];
       axios.get('decks/find-decks?name=' + $deckName).then(function (_ref3) {
         var data = _ref3.data;
-        console.log(data);
+        _this2.searching = false;
+        _this2.foundDecks = data.data;
+
+        if (_this2.foundDecks.length == 6) {
+          _this2.errors = {
+            'name': ['The number of results is more than the number displayed.'],
+            'id': ['The number of results is more than the number displayed.']
+          };
+        } else if (_this2.foundDecks.length == 0) {
+          _this2.errors = {
+            'name': ['No results were found.'],
+            'id': ['No results were found.']
+          };
+        }
       });
     }
   }
@@ -1914,20 +1961,23 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
+      alert: 'Loading',
       decks: [],
       pageCount: 1,
-      endpoint: 'decks?page='
+      endpoint: 'decks'
     };
+  },
+  watch: {
+    decks: function decks(val, oldval) {
+      if (val.length == 0) {
+        this.alert = "I have no decks. The 'Add' button will begin the process";
+      } else {
+        this.alert = '';
+      }
+    }
   },
   created: function created() {
     this.fetch();
@@ -1937,10 +1987,14 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-      axios.get(this.endpoint + page).then(function (_ref) {
+      axios.get(this.endpoint + '?page=' + page).then(function (_ref) {
         var data = _ref.data;
-        _this.decks = data.data; //this.pageCount = data.meta.last_page;
+        _this.decks = data; //this.pageCount = data.meta.last_page;
       });
+    },
+    added: function added() {
+      this.saved = true;
+      this.fetch();
     },
     report: function report(id) {
       var _this2 = this;
@@ -1952,8 +2006,17 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     removeDeck: function removeDeck(id) {
-      this.decks = _.remove(this.decks, function (deck) {
-        return deck.id !== id;
+      var _this3 = this;
+
+      axios.delete(this.endpoint + '/' + id).then(function (_ref2) {
+        var data = _ref2.data;
+
+        if (data) {
+          _this3.saved = false;
+          _this3.decks = _.remove(_this3.decks, function (deck) {
+            return deck.id !== id;
+          });
+        }
       });
     },
     createDeck: function createDeck() {
@@ -36544,9 +36607,10 @@ var render = function() {
       "button",
       {
         staticClass: "btn",
+        staticStyle: { "margin-bottom": "1rem" },
         on: {
           click: function($event) {
-            _vm.showModal = true
+            _vm.addButton()
           }
         }
       },
@@ -36586,13 +36650,7 @@ var render = function() {
                               "form",
                               {
                                 staticClass: "form-horizontal",
-                                attrs: { method: "post" },
-                                on: {
-                                  submit: function($event) {
-                                    $event.preventDefault()
-                                    return _vm.onSubmit($event)
-                                  }
-                                }
+                                attrs: { method: "post" }
                               },
                               [
                                 _c("fieldset", [
@@ -36620,7 +36678,7 @@ var render = function() {
                                             attrs: { "aria-hidden": "true" },
                                             on: {
                                               click: function($event) {
-                                                _vm.showModal = false
+                                                _vm.closeModal()
                                               }
                                             }
                                           },
@@ -36628,109 +36686,160 @@ var render = function() {
                                         )
                                       ]
                                     )
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "form-group" }, [
-                                    _c(
-                                      "label",
+                                  ])
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c(
+                                "label",
+                                {
+                                  staticClass: "col-md-3 control-label",
+                                  attrs: { for: "name" }
+                                },
+                                [_vm._v("Name")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass: "col-md-9",
+                                  class: { "has-error": _vm.errors.name }
+                                },
+                                [
+                                  _c("input", {
+                                    directives: [
                                       {
-                                        staticClass: "col-md-3 control-label",
-                                        attrs: { for: "name" }
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.deck.name,
+                                        expression: "deck.name"
                                       },
-                                      [_vm._v("Name")]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
+                                      { name: "focus", rawName: "v-focus" }
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: {
+                                      id: "name",
+                                      type: "text",
+                                      placeholder: "Deck name"
+                                    },
+                                    domProps: { value: _vm.deck.name },
+                                    on: {
+                                      keyup: function($event) {
+                                        if (
+                                          !("button" in $event) &&
+                                          _vm._k(
+                                            $event.keyCode,
+                                            "enter",
+                                            13,
+                                            $event.key,
+                                            "Enter"
+                                          )
+                                        ) {
+                                          return null
+                                        }
+                                        _vm.findDeck(_vm.deck.name)
+                                      },
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.deck,
+                                          "name",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _vm.errors.name
+                                    ? _c(
+                                        "span",
+                                        {
+                                          staticClass: "help-block text-danger"
+                                        },
+                                        [_vm._v(_vm._s(_vm.errors.name[0]))]
+                                      )
+                                    : _vm._e()
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _vm.searching
+                              ? _c(
+                                  "div",
+                                  { staticClass: "form-group col-md-9" },
+                                  [
+                                    _vm._v(
+                                      "\n                      Searching...\n                    "
+                                    )
+                                  ]
+                                )
+                              : _c(
+                                  "div",
+                                  _vm._l(_vm.foundDecks, function(deck, index) {
+                                    return _c(
                                       "div",
                                       {
-                                        staticClass: "col-md-9",
-                                        class: { "has-error": _vm.errors.name }
+                                        key: deck.id,
+                                        staticClass: "form-group col-md-9"
                                       },
                                       [
-                                        _c("input", {
-                                          directives: [
-                                            {
-                                              name: "model",
-                                              rawName: "v-model",
-                                              value: _vm.deck.name,
-                                              expression: "deck.name"
-                                            }
-                                          ],
-                                          staticClass: "form-control",
-                                          attrs: {
-                                            id: "name",
-                                            type: "text",
-                                            placeholder: "Deck name"
-                                          },
-                                          domProps: { value: _vm.deck.name },
-                                          on: {
-                                            input: function($event) {
-                                              if ($event.target.composing) {
-                                                return
-                                              }
-                                              _vm.$set(
-                                                _vm.deck,
-                                                "name",
-                                                $event.target.value
-                                              )
-                                            }
-                                          }
-                                        }),
-                                        _vm._v(" "),
-                                        _vm.errors.name
+                                        index != 5
                                           ? _c(
-                                              "span",
+                                              "button",
                                               {
-                                                staticClass:
-                                                  "help-block text-danger"
+                                                staticClass: "btn",
+                                                on: {
+                                                  click: function($event) {
+                                                    _vm.addDeck(deck)
+                                                  }
+                                                }
                                               },
-                                              [
-                                                _vm._v(
-                                                  _vm._s(_vm.errors.name[0])
-                                                )
-                                              ]
+                                              [_vm._v(_vm._s(deck.name))]
                                             )
                                           : _vm._e()
                                       ]
                                     )
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("div", { staticClass: "modal-footer" }, [
-                                    _c(
-                                      "button",
-                                      {
-                                        staticClass: "btn btn-secondary",
-                                        attrs: { type: "button" },
-                                        on: {
-                                          click: function($event) {
-                                            _vm.showModal = false
-                                          }
-                                        }
-                                      },
-                                      [_vm._v("Close")]
-                                    ),
-                                    _vm._v(" "),
-                                    _c(
-                                      "button",
-                                      {
-                                        staticClass: "btn btn-primary",
-                                        attrs: {
-                                          disabled: !_vm.deck.name,
-                                          type: "button",
-                                          id: "find-button"
-                                        },
-                                        on: {
-                                          click: function($event) {
-                                            _vm.findDeck(_vm.deck.name)
-                                          }
-                                        }
-                                      },
-                                      [_vm._v("Find Deck")]
-                                    )
-                                  ])
-                                ])
-                              ]
-                            )
+                                  }),
+                                  0
+                                ),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "modal-footer" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-secondary",
+                                  attrs: { type: "button" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.closeModal()
+                                    }
+                                  }
+                                },
+                                [_vm._v("Close")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-primary",
+                                  attrs: {
+                                    disabled: !_vm.deck.name,
+                                    type: "button",
+                                    id: "find-button"
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.findDeck(_vm.deck.name)
+                                    }
+                                  }
+                                },
+                                [_vm._v("Find Deck")]
+                              )
+                            ])
                           ]
                         )
                       ])
@@ -36770,60 +36879,50 @@ var render = function() {
   return _c(
     "div",
     [
-      _vm.decks !== null
+      _vm.alert.length > 0
         ? _c("div", { staticClass: "alert alert-warning" }, [
-            _vm._v("\n        I have no decks. Click 'Add' to begin.\n    ")
+            _vm._v("\n        " + _vm._s(_vm.alert) + "\n    ")
           ])
         : _vm._e(),
       _vm._v(" "),
       _vm._l(_vm.decks, function(deck) {
-        return _c("div", { staticClass: "panel panel-default" }, [
-          _c("div", { staticClass: "panel-heading" }, [
-            _c("span", {
-              staticClass: "glyphicon glyphicon-user",
-              attrs: { id: "start" }
-            }),
+        return _c(
+          "div",
+          {
+            staticClass: "panel panel-default",
+            on: {
+              added: function($event) {
+                _vm.goagain()
+              }
+            }
+          },
+          [
+            _c("div", { staticClass: "panel-heading" }),
             _vm._v(" "),
-            _c("label", { attrs: { id: "started" } }, [_vm._v("By")]),
-            _vm._v(" " + _vm._s(deck.name) + "\n        ")
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "panel-body" }, [
-            _c("div", { staticClass: "col-md-2" }, [
-              _c("div", { staticClass: "thumbnail" }, [
-                _c("img", { attrs: { src: deck.avatar, alt: deck.name } })
+            _c("div", { staticClass: "panel-body" }, [
+              _c("div", { staticClass: "col-md-6" }, [
+                _vm._v("\n                " + _vm._s(deck.name) + " | "),
+                _c(
+                  "a",
+                  {
+                    attrs: { href: "javascript:void(0);", id: "remove" },
+                    on: {
+                      click: function($event) {
+                        _vm.removeDeck(deck.id)
+                      }
+                    }
+                  },
+                  [_vm._v("Remove")]
+                )
               ])
             ]),
             _vm._v(" "),
-            _c("p", [_vm._v(_vm._s(deck.body))])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "panel-footer" }, [
-            _c("span", {
-              staticClass: "glyphicon glyphicon-calendar",
-              attrs: { id: "visit" }
-            }),
-            _vm._v(" " + _vm._s(deck.updated_at) + " |\n            "),
-            _c("span", {
-              staticClass: "glyphicon glyphicon-flag",
-              attrs: { id: "comment" }
-            }),
-            _vm._v(" "),
-            _c(
-              "a",
-              {
-                attrs: { href: "#", id: "remove" },
-                on: {
-                  click: function($event) {
-                    _vm.remove(deck.id)
-                  }
-                }
-              },
-              [_vm._v("Remove")]
-            )
-          ])
-        ])
-      })
+            _c("div", { staticClass: "panel-footer" })
+          ]
+        )
+      }),
+      _vm._v(" "),
+      _c("deck-form", { on: { added: _vm.added } })
     ],
     2
   )
@@ -48183,7 +48282,15 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue").default);
 Vue.component('decks', __webpack_require__(/*! ./components/Decks.vue */ "./resources/js/components/Decks.vue").default);
 Vue.component('deck-form', __webpack_require__(/*! ./components/DeckForm.vue */ "./resources/js/components/DeckForm.vue").default);
-Vue.component('paginate', __webpack_require__(/*! vuejs-paginate */ "./node_modules/vuejs-paginate/dist/index.js"));
+Vue.component('paginate', __webpack_require__(/*! vuejs-paginate */ "./node_modules/vuejs-paginate/dist/index.js")); // Register a global custom directive called `v-focus`
+
+Vue.directive('focus', {
+  // When the bound element is inserted into the DOM...
+  inserted: function inserted(el) {
+    // Focus the element
+    el.focus();
+  }
+});
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

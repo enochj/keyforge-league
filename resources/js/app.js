@@ -25,6 +25,15 @@ Vue.component('decks', require('./components/Decks.vue').default);
 Vue.component('deck-form', require('./components/DeckForm.vue').default);
 Vue.component('paginate', require('vuejs-paginate'));
 
+// Register a global custom directive called `v-focus`
+Vue.directive('focus', {
+  // When the bound element is inserted into the DOM...
+  inserted: function (el) {
+    // Focus the element
+    el.focus()
+  }
+})
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application

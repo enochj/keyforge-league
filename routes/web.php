@@ -11,9 +11,10 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Route::get('/', function () {
+//     return view('player.index');
+// });
+Route::get('/', 'PlayerController@index');
 
 Auth::routes();
 
