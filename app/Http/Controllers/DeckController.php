@@ -114,7 +114,7 @@ class DeckController extends Controller
 
     public function findDecks(Request $request)
     {
-        $search_string = $this->curl_url.'?page=1&page_size=10&search=';
+        $search_string = $this->curl_url.'?page=1&page_size=6&search=';
         if ($request->name) {
             $search_string.=rawurlencode($request->name);
         } else {

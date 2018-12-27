@@ -37,9 +37,9 @@
                       </div>
                       <div v-else>
                         <div class="form-group col-md-9"
-                          v-for="deck in foundDecks"
+                          v-for="(deck, index) in foundDecks"
                           :key="deck.id">
-                          <button class ="btn" @click="addDeck(deck)">{{deck.name}}</button>
+                          <button v-if="index != 5" class ="btn" @click="addDeck(deck)">{{deck.name}}</button>
                         </div>
                       </div>
 
@@ -83,7 +83,8 @@
         },
         showModal: false,
         foundDecks: [],
-        searching: false
+        searching: false,
+        exceeded: false
       };
     },
 
@@ -137,6 +138,13 @@
         axios.get('decks/find-decks?name='+$deckName).then(({data}) => {
           this.searching = false;
           this.foundDecks = data.data;
+          if (this.foundDecks.length == 3) {
+            console.log('heyooo');
+            this.errors = {
+              'name' : ['The number of results is more than the number displayed.'],
+              'id' : ['The number of results is more than the number displayed.']
+            };
+          }
         });
       }
     }
