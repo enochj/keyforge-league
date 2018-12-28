@@ -23,6 +23,8 @@ window.Vue = require('vue');
 Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component('decks', require('./components/Decks.vue').default);
 Vue.component('deck-form', require('./components/DeckForm.vue').default);
+Vue.component('leagues', require('./components/Leagues.vue').default);
+Vue.component('league-form', require('./components/LeagueForm.vue').default);
 Vue.component('paginate', require('vuejs-paginate'));
 
 // Register a global custom directive called `v-focus`

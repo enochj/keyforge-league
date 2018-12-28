@@ -36606,7 +36606,7 @@ var render = function() {
     _c(
       "button",
       {
-        staticClass: "btn",
+        staticClass: "btn btn-primary",
         staticStyle: { "margin-bottom": "1rem" },
         on: {
           click: function($event) {
@@ -48282,6 +48282,8 @@ window.Vue = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.common.
 Vue.component('example-component', __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue").default);
 Vue.component('decks', __webpack_require__(/*! ./components/Decks.vue */ "./resources/js/components/Decks.vue").default);
 Vue.component('deck-form', __webpack_require__(/*! ./components/DeckForm.vue */ "./resources/js/components/DeckForm.vue").default);
+Vue.component('leagues', __webpack_require__(/*! ./components/Leagues.vue */ "./resources/js/components/Leagues.vue").default);
+Vue.component('league-form', __webpack_require__(/*! ./components/LeagueForm.vue */ "./resources/js/components/LeagueForm.vue").default);
 Vue.component('paginate', __webpack_require__(/*! vuejs-paginate */ "./node_modules/vuejs-paginate/dist/index.js")); // Register a global custom directive called `v-focus`
 
 Vue.directive('focus', {
@@ -48565,6 +48567,70 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_ExampleComponent_vue_vue_type_template_id_299e239e___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
 
 
+
+/***/ }),
+
+/***/ "./resources/js/components/LeagueForm.vue":
+/*!************************************************!*\
+  !*** ./resources/js/components/LeagueForm.vue ***!
+  \************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+var render, staticRenderFns
+var script = {}
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_0__["default"])(
+  script,
+  render,
+  staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+component.options.__file = "resources/js/components/LeagueForm.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Leagues.vue":
+/*!*********************************************!*\
+  !*** ./resources/js/components/Leagues.vue ***!
+  \*********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+var render, staticRenderFns
+var script = {}
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_0__["default"])(
+  script,
+  render,
+  staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+component.options.__file = "resources/js/components/Leagues.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
 
 /***/ }),
 

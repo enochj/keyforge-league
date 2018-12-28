@@ -6,6 +6,8 @@
             <div class="col-md-12">
                 My Decks
                 <decks></decks>
+                My Leagues
+                <leagues></leagues>
             </div>
         </div>
     </div>

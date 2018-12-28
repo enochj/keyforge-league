@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button class="btn" @click="addButton()" style="margin-bottom:1rem">Add</button>
+    <button class="btn btn-primary" @click="addButton()" style="margin-bottom:1rem">Add</button>
     <div class="alert alert-success" v-if="saved">
       <strong>Success!</strong> Your deck has been added successfully.
     </div>
