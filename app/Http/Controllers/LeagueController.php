@@ -95,10 +95,13 @@ class LeagueController extends Controller
      */
     public function destroy($id)
     {
-        $player_id = Auth::user()->player()->first()->id;
+        $player = Auth::user()->player()->first();
+        $player_id = $player->id;
         $is_deleted = false;
         if (League::findOrFail($id)->owner_id == $player_id) {
             $is_deleted = League::destroy($id);
+        } else {
+            return League::findOrFail($id)->players()->detach($player);
         }
         return $is_deleted;
     }
