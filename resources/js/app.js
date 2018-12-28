@@ -20,7 +20,21 @@ window.Vue = require('vue');
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key)))
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component('decks', require('./components/Decks.vue').default);
+Vue.component('deck-form', require('./components/DeckForm.vue').default);
+Vue.component('leagues', require('./components/Leagues.vue').default);
+Vue.component('league-form', require('./components/LeagueForm.vue').default);
+Vue.component('paginate', require('vuejs-paginate'));
+
+// Register a global custom directive called `v-focus`
+Vue.directive('focus', {
+  // When the bound element is inserted into the DOM...
+  inserted: function (el) {
+    // Focus the element
+    el.focus()
+  }
+})
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -29,5 +43,5 @@ Vue.component('example-component', require('./components/ExampleComponent.vue'))
  */
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
 });
