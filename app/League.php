@@ -8,16 +8,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class League extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'owner_id'];
 
     public function players()
     {
-        return $this->belongsToMany('App\Player');
+        return $this->belongsToMany('App\Player')->withTimestamps();
     }
 
     public function decks()
     {
-        return $this->belongsToMany('App\Deck');
+        return $this->belongsToMany('App\Deck')->withTimestamps();
     }
 
     public function find(Request $request)

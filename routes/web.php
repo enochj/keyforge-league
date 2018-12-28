@@ -23,6 +23,10 @@ Route::get('/player', 'PlayerController@index')->name('player');
 Route::get('/add', 'DeckController@create')->name('create-deck');
 Route::get('/decks/find-decks', 'DeckController@findDecks')
     ->name('find-decks');
+Route::get('/leagues/find-leagues', 'LeagueController@findLeagues')
+    ->name('find-leagues');
+Route::post('/leagues/join-league', 'LeagueController@joinLeague')
+    ->name('join-league');
 
 Route::resources([
     'leagues' => 'LeagueController',

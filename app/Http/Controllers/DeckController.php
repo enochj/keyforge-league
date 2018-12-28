@@ -41,7 +41,7 @@ class DeckController extends Controller
      */
     public function create()
     {
-        return view('deck.create');
+        // return view('deck.create');
     }
 
     /**
@@ -52,7 +52,8 @@ class DeckController extends Controller
      */
     public function store(Request $request)
     {
-        $player_id = Auth::user()->player()->first()->id;
+        $player = Auth::user()->player()->first();
+        $player_id = $player->id;
 
         $validatedData = $request->validate([
             'id' => 'bail|required',
@@ -61,9 +62,9 @@ class DeckController extends Controller
             })
         ]);
 
+        $deck = null;
         if (isset($request->id) && isset($request->name)) {
-            $deck = Deck::create([
-                'player_id' => $player_id,
+            $player->decks()->create([
                 'name' => $request->name,
                 'kf_id' => $request->id,
             ]);
