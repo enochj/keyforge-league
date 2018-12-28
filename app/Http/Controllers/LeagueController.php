@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\League;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class LeagueController extends Controller
 {
@@ -14,7 +15,8 @@ class LeagueController extends Controller
      */
     public function index()
     {
-        //
+        $leagues = Auth::user()->player()->first()->leagues()->get();
+        return $leagues;
     }
 
     /**
@@ -35,7 +37,20 @@ class LeagueController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $player = Auth::user()->player()->first();
+
+        $validatedData = $request->validate([
+            'name' => 'bail|required|unique:leagues,name,,id,deleted_at,NULL'
+        ]);
+
+        $league = null;
+        if (isset($request->name)) {
+            $league = League::create([
+                'owner_id' => $player->id,
+                'name' => $request->name,
+            ])->players()->attach($player);
+        }
+        return $league;
     }
 
     /**
@@ -75,11 +90,39 @@ class LeagueController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\League  $league
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(League $league)
+    public function destroy($id)
     {
-        //
+        $player_id = Auth::user()->player()->first()->id;
+        $is_deleted = false;
+        if (League::findOrFail($id)->owner_id == $player_id) {
+            $is_deleted = League::destroy($id);
+        }
+        return $is_deleted;
+    }
+
+    public function findLeagues(Request $request)
+    {
+        $request->validate([
+            'name' => 'required'
+        ]);
+        $leagues = League::where('name', 'like', '%'.$request->name.'%')->get();
+        return $leagues;
+    }
+
+    public function joinLeague(Request $request)
+    {
+        $player = Auth::user()->player()->first();
+        $league = League::findOrFail($request->id);
+        if ($league->players->contains($player)) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error',
+                'errors' => array('name' => array("I'm already in this league."))
+            ], 422);
+        }
+        return League::findOrFail($request->id)->players()->attach($player);
     }
 }

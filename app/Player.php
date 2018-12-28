@@ -13,7 +13,7 @@ class Player extends Model
 
     public function leagues()
     {
-        return $this->belongsToMany('App\League');
+        return $this->belongsToMany('App\League')->withTimestamps();
     }
 
     public function decks()

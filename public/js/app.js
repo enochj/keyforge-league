@@ -2060,6 +2060,293 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LeagueForm.vue?vue&type=script&lang=js&":
+/*!*********************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LeagueForm.vue?vue&type=script&lang=js& ***!
+  \*********************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      saved: false,
+      errors: [],
+      league: {
+        name: null
+      },
+      showModal: false,
+      foundLeagues: [],
+      searching: false,
+      exceeded: false,
+      adding: false,
+      joining: false
+    };
+  },
+  methods: {
+    addButton: function addButton() {
+      this.adding = true;
+      this.showModal = true;
+      this.saved = false;
+    },
+    joinButton: function joinButton() {
+      this.joining = true;
+      this.showModal = true;
+      this.saved = false;
+    },
+    joinLeague: function joinLeague(id) {
+      var _this = this;
+
+      axios.post('leagues/join-league', {
+        'id': id
+      }).then(function (_ref) {
+        var data = _ref.data;
+
+        _this.setSuccessMessage();
+
+        _this.$emit('added');
+      }).catch(function (_ref2) {
+        var response = _ref2.response;
+        return _this.setErrors(response);
+      });
+    },
+    createLeague: function createLeague(league) {
+      var _this2 = this;
+
+      axios.post('leagues', {
+        'name': league
+      }).then(function (_ref3) {
+        var data = _ref3.data;
+
+        _this2.setSuccessMessage();
+
+        _this2.$emit('added');
+      }).catch(function (_ref4) {
+        var response = _ref4.response;
+        return _this2.setErrors(response);
+      });
+    },
+    onSubmit: function onSubmit() {
+      this.findLeague(league.target.name.value);
+      return false;
+    },
+    setErrors: function setErrors(response) {
+      this.errors = response.data.errors;
+    },
+    setSuccessMessage: function setSuccessMessage() {
+      this.reset();
+      this.saved = true;
+      this.showModal = false;
+    },
+    closeModal: function closeModal() {
+      this.showModal = false;
+      this.reset();
+    },
+    reset: function reset() {
+      this.errors = [];
+      this.foundLeagues = [];
+      this.league = {
+        name: null
+      };
+      this.adding = false;
+      this.joining = false;
+    },
+    findLeague: function findLeague($leagueName) {
+      var _this3 = this;
+
+      if ($leagueName == null || $leagueName.trim().length == 0) {
+        return false;
+      }
+
+      if (document.getElementById("create-button")) {
+        return this.createLeague($leagueName);
+      }
+
+      this.searching = true;
+      this.errors = [];
+      axios.get('leagues/find-leagues?name=' + $leagueName).then(function (_ref5) {
+        var data = _ref5.data;
+        _this3.searching = false;
+        _this3.foundLeagues = data;
+
+        if (_this3.foundLeagues.length == 6) {
+          _this3.errors = {
+            'name': ['The number of results is more than the number displayed.'],
+            'id': ['The number of results is more than the number displayed.']
+          };
+        } else if (_this3.foundLeagues.length == 0) {
+          _this3.errors = {
+            'name': ['No results were found.'],
+            'id': ['No results were found.']
+          };
+        }
+      });
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Leagues.vue?vue&type=script&lang=js&":
+/*!******************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Leagues.vue?vue&type=script&lang=js& ***!
+  \******************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      alert: 'Loading',
+      leagues: [],
+      pageCount: 1,
+      endpoint: 'leagues'
+    };
+  },
+  watch: {
+    leagues: function leagues(val, oldval) {
+      if (val.length == 0) {
+        this.alert = "I have no leagues. The 'Create' or 'Join' buttons will begin the process";
+      } else {
+        this.alert = '';
+      }
+    }
+  },
+  created: function created() {
+    this.fetch();
+  },
+  methods: {
+    fetch: function fetch() {
+      var _this = this;
+
+      var page = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
+      axios.get(this.endpoint + '?page=' + page).then(function (_ref) {
+        var data = _ref.data;
+        _this.leagues = data; //this.pageCount = data.meta.last_page;
+      });
+    },
+    added: function added() {
+      this.saved = true;
+      this.fetch();
+    },
+    removeLeague: function removeLeague(id) {
+      var _this2 = this;
+
+      if (confirm('Are you sure you want to remove this league?')) {
+        axios.delete(this.endpoint + '/' + id).then(function (_ref2) {
+          var data = _ref2.data;
+
+          if (data) {
+            _this2.saved = false;
+            _this2.leagues = _.remove(_this2.leagues, function (league) {
+              return league.id !== id;
+            });
+          }
+        });
+      }
+    }
+  }
+});
+
+/***/ }),
+
 /***/ "./node_modules/bootstrap/dist/js/bootstrap.js":
 /*!*****************************************************!*\
   !*** ./node_modules/bootstrap/dist/js/bootstrap.js ***!
@@ -36886,40 +37173,29 @@ var render = function() {
         : _vm._e(),
       _vm._v(" "),
       _vm._l(_vm.decks, function(deck) {
-        return _c(
-          "div",
-          {
-            staticClass: "panel panel-default",
-            on: {
-              added: function($event) {
-                _vm.goagain()
-              }
-            }
-          },
-          [
-            _c("div", { staticClass: "panel-heading" }),
-            _vm._v(" "),
-            _c("div", { staticClass: "panel-body" }, [
-              _c("div", { staticClass: "col-md-6" }, [
-                _vm._v("\n                " + _vm._s(deck.name) + " | "),
-                _c(
-                  "a",
-                  {
-                    attrs: { href: "javascript:void(0);", id: "remove" },
-                    on: {
-                      click: function($event) {
-                        _vm.removeDeck(deck.id)
-                      }
+        return _c("div", { staticClass: "panel panel-default" }, [
+          _c("div", { staticClass: "panel-heading" }),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-body" }, [
+            _c("div", { staticClass: "col-md-6" }, [
+              _vm._v("\n                " + _vm._s(deck.name) + " | "),
+              _c(
+                "a",
+                {
+                  attrs: { href: "javascript:void(0);", id: "remove" },
+                  on: {
+                    click: function($event) {
+                      _vm.removeDeck(deck.id)
                     }
-                  },
-                  [_vm._v("Remove")]
-                )
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "panel-footer" })
-          ]
-        )
+                  }
+                },
+                [_vm._v("Remove")]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-footer" })
+        ])
       }),
       _vm._v(" "),
       _c("deck-form", { on: { added: _vm.added } })
@@ -36975,6 +37251,408 @@ var staticRenderFns = [
     ])
   }
 ]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LeagueForm.vue?vue&type=template&id=05decebe&":
+/*!*************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/LeagueForm.vue?vue&type=template&id=05decebe& ***!
+  \*************************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c(
+      "button",
+      {
+        staticClass: "btn btn-primary",
+        staticStyle: { "margin-bottom": "1rem" },
+        on: {
+          click: function($event) {
+            _vm.addButton()
+          }
+        }
+      },
+      [_vm._v("Add")]
+    ),
+    _vm._v(" "),
+    _c(
+      "button",
+      {
+        staticClass: "btn btn-primary",
+        staticStyle: { "margin-bottom": "1rem" },
+        on: {
+          click: function($event) {
+            _vm.joinButton()
+          }
+        }
+      },
+      [_vm._v("Join")]
+    ),
+    _vm._v(" "),
+    _vm.saved
+      ? _c("div", { staticClass: "alert alert-success" }, [
+          _c("strong", [_vm._v("Success!")]),
+          _vm._v(" Your league has been added successfully.\n  ")
+        ])
+      : _vm._e(),
+    _vm._v(" "),
+    _vm.showModal
+      ? _c(
+          "div",
+          [
+            _c("transition", { attrs: { name: "modal" } }, [
+              _c("div", { staticClass: "modal-mask" }, [
+                _c("div", { staticClass: "modal-wrapper" }, [
+                  _c(
+                    "div",
+                    {
+                      staticClass: "modal-dialog",
+                      attrs: { role: "document" }
+                    },
+                    [
+                      _c("div", { staticClass: "modal-content" }, [
+                        _c(
+                          "div",
+                          {
+                            staticClass: "well well-sm",
+                            attrs: { id: "league-form" }
+                          },
+                          [
+                            _c(
+                              "form",
+                              {
+                                staticClass: "form-horizontal",
+                                attrs: { method: "post" },
+                                on: {
+                                  keyup: function($event) {
+                                    if (
+                                      !("button" in $event) &&
+                                      _vm._k(
+                                        $event.keyCode,
+                                        "enter",
+                                        13,
+                                        $event.key,
+                                        "Enter"
+                                      )
+                                    ) {
+                                      return null
+                                    }
+                                    _vm.console.log("heybud")
+                                  }
+                                }
+                              },
+                              [
+                                _c("fieldset", [
+                                  _c("div", { staticClass: "modal-header" }, [
+                                    _vm.adding
+                                      ? _c(
+                                          "legend",
+                                          { staticClass: "text-center" },
+                                          [_vm._v("Add a League")]
+                                        )
+                                      : _vm._e(),
+                                    _vm._v(" "),
+                                    _vm.joining
+                                      ? _c(
+                                          "legend",
+                                          { staticClass: "text-center" },
+                                          [_vm._v("Join a League")]
+                                        )
+                                      : _vm._e(),
+                                    _vm._v(" "),
+                                    _c(
+                                      "button",
+                                      {
+                                        staticClass: "close",
+                                        attrs: {
+                                          type: "button",
+                                          "data-dismiss": "modal",
+                                          "aria-label": "Close"
+                                        }
+                                      },
+                                      [
+                                        _c(
+                                          "span",
+                                          {
+                                            attrs: { "aria-hidden": "true" },
+                                            on: {
+                                              click: function($event) {
+                                                _vm.closeModal()
+                                              }
+                                            }
+                                          },
+                                          [_vm._v("×")]
+                                        )
+                                      ]
+                                    )
+                                  ])
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "form-group" }, [
+                              _c(
+                                "label",
+                                {
+                                  staticClass: "col-md-3 control-label",
+                                  attrs: { for: "name" }
+                                },
+                                [_vm._v("Name")]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                {
+                                  staticClass: "col-md-9",
+                                  class: { "has-error": _vm.errors.name }
+                                },
+                                [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: _vm.league.name,
+                                        expression: "league.name"
+                                      },
+                                      { name: "focus", rawName: "v-focus" }
+                                    ],
+                                    staticClass: "form-control",
+                                    attrs: {
+                                      id: "name",
+                                      type: "text",
+                                      placeholder: "League name"
+                                    },
+                                    domProps: { value: _vm.league.name },
+                                    on: {
+                                      keyup: function($event) {
+                                        if (
+                                          !("button" in $event) &&
+                                          _vm._k(
+                                            $event.keyCode,
+                                            "enter",
+                                            13,
+                                            $event.key,
+                                            "Enter"
+                                          )
+                                        ) {
+                                          return null
+                                        }
+                                        _vm.findLeague(_vm.league.name)
+                                      },
+                                      input: function($event) {
+                                        if ($event.target.composing) {
+                                          return
+                                        }
+                                        _vm.$set(
+                                          _vm.league,
+                                          "name",
+                                          $event.target.value
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _vm.errors.name
+                                    ? _c(
+                                        "span",
+                                        {
+                                          staticClass: "help-block text-danger"
+                                        },
+                                        [_vm._v(_vm._s(_vm.errors.name[0]))]
+                                      )
+                                    : _vm._e()
+                                ]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _vm.searching
+                              ? _c(
+                                  "div",
+                                  { staticClass: "form-group col-md-9" },
+                                  [
+                                    _vm._v(
+                                      "\n                      Searching...\n                    "
+                                    )
+                                  ]
+                                )
+                              : _c(
+                                  "div",
+                                  _vm._l(_vm.foundLeagues, function(
+                                    league,
+                                    index
+                                  ) {
+                                    return _c(
+                                      "div",
+                                      {
+                                        key: league.id,
+                                        staticClass: "form-group col-md-9"
+                                      },
+                                      [
+                                        index != 5
+                                          ? _c(
+                                              "button",
+                                              {
+                                                staticClass: "btn",
+                                                on: {
+                                                  click: function($event) {
+                                                    _vm.joinLeague(league.id)
+                                                  }
+                                                }
+                                              },
+                                              [_vm._v(_vm._s(league.name))]
+                                            )
+                                          : _vm._e()
+                                      ]
+                                    )
+                                  }),
+                                  0
+                                ),
+                            _vm._v(" "),
+                            _c("div", { staticClass: "modal-footer" }, [
+                              _c(
+                                "button",
+                                {
+                                  staticClass: "btn btn-secondary",
+                                  attrs: { type: "button" },
+                                  on: {
+                                    click: function($event) {
+                                      _vm.closeModal()
+                                    }
+                                  }
+                                },
+                                [_vm._v("Close")]
+                              ),
+                              _vm._v(" "),
+                              _vm.joining
+                                ? _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-primary",
+                                      attrs: {
+                                        disabled: !_vm.league.name,
+                                        type: "button",
+                                        id: "find-button"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          _vm.findLeague(_vm.league.name)
+                                        }
+                                      }
+                                    },
+                                    [_vm._v("Find League")]
+                                  )
+                                : _vm._e(),
+                              _vm._v(" "),
+                              _vm.adding
+                                ? _c(
+                                    "button",
+                                    {
+                                      staticClass: "btn btn-primary",
+                                      attrs: {
+                                        disabled: !_vm.league.name,
+                                        type: "button",
+                                        id: "create-button"
+                                      },
+                                      on: {
+                                        click: function($event) {
+                                          _vm.createLeague(_vm.league.name)
+                                        }
+                                      }
+                                    },
+                                    [_vm._v("Add")]
+                                  )
+                                : _vm._e()
+                            ])
+                          ]
+                        )
+                      ])
+                    ]
+                  )
+                ])
+              ])
+            ])
+          ],
+          1
+        )
+      : _vm._e()
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Leagues.vue?vue&type=template&id=3aef28ee&":
+/*!**********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Leagues.vue?vue&type=template&id=3aef28ee& ***!
+  \**********************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    [
+      _vm.alert.length > 0
+        ? _c("div", { staticClass: "alert alert-warning" }, [
+            _vm._v("\n        " + _vm._s(_vm.alert) + "\n    ")
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm._l(_vm.leagues, function(league) {
+        return _c("div", { staticClass: "panel panel-default" }, [
+          _c("div", { staticClass: "panel-heading" }),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-body" }, [
+            _c("div", { staticClass: "col-md-6" }, [
+              _vm._v("\n                " + _vm._s(league.name) + " | "),
+              _c(
+                "a",
+                {
+                  attrs: { href: "javascript:void(0);", id: "remove" },
+                  on: {
+                    click: function($event) {
+                      _vm.removeLeague(league.id)
+                    }
+                  }
+                },
+                [_vm._v("Remove")]
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "panel-footer" })
+        ])
+      }),
+      _vm._v(" "),
+      _c("league-form", { on: { added: _vm.added } })
+    ],
+    2
+  )
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -48579,17 +49257,20 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-var render, staticRenderFns
-var script = {}
+/* harmony import */ var _LeagueForm_vue_vue_type_template_id_05decebe___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./LeagueForm.vue?vue&type=template&id=05decebe& */ "./resources/js/components/LeagueForm.vue?vue&type=template&id=05decebe&");
+/* harmony import */ var _LeagueForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./LeagueForm.vue?vue&type=script&lang=js& */ "./resources/js/components/LeagueForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
 
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_0__["default"])(
-  script,
-  render,
-  staticRenderFns,
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _LeagueForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _LeagueForm_vue_vue_type_template_id_05decebe___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _LeagueForm_vue_vue_type_template_id_05decebe___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -48597,8 +49278,42 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
   
 )
 
+/* hot reload */
+if (false) { var api; }
 component.options.__file = "resources/js/components/LeagueForm.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/LeagueForm.vue?vue&type=script&lang=js&":
+/*!*************************************************************************!*\
+  !*** ./resources/js/components/LeagueForm.vue?vue&type=script&lang=js& ***!
+  \*************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LeagueForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./LeagueForm.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LeagueForm.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_LeagueForm_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/LeagueForm.vue?vue&type=template&id=05decebe&":
+/*!*******************************************************************************!*\
+  !*** ./resources/js/components/LeagueForm.vue?vue&type=template&id=05decebe& ***!
+  \*******************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LeagueForm_vue_vue_type_template_id_05decebe___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./LeagueForm.vue?vue&type=template&id=05decebe& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/LeagueForm.vue?vue&type=template&id=05decebe&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LeagueForm_vue_vue_type_template_id_05decebe___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_LeagueForm_vue_vue_type_template_id_05decebe___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 
@@ -48606,22 +49321,26 @@ component.options.__file = "resources/js/components/LeagueForm.vue"
 /*!*********************************************!*\
   !*** ./resources/js/components/Leagues.vue ***!
   \*********************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
-var render, staticRenderFns
-var script = {}
+/* harmony import */ var _Leagues_vue_vue_type_template_id_3aef28ee___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Leagues.vue?vue&type=template&id=3aef28ee& */ "./resources/js/components/Leagues.vue?vue&type=template&id=3aef28ee&");
+/* harmony import */ var _Leagues_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Leagues.vue?vue&type=script&lang=js& */ "./resources/js/components/Leagues.vue?vue&type=script&lang=js&");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Leagues_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Leagues_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
 
 
 /* normalize component */
 
-var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_0__["default"])(
-  script,
-  render,
-  staticRenderFns,
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _Leagues_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _Leagues_vue_vue_type_template_id_3aef28ee___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _Leagues_vue_vue_type_template_id_3aef28ee___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
   false,
   null,
   null,
@@ -48629,8 +49348,42 @@ var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_
   
 )
 
+/* hot reload */
+if (false) { var api; }
 component.options.__file = "resources/js/components/Leagues.vue"
 /* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/components/Leagues.vue?vue&type=script&lang=js&":
+/*!**********************************************************************!*\
+  !*** ./resources/js/components/Leagues.vue?vue&type=script&lang=js& ***!
+  \**********************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Leagues_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/babel-loader/lib??ref--4-0!../../../node_modules/vue-loader/lib??vue-loader-options!./Leagues.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Leagues.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_Leagues_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/components/Leagues.vue?vue&type=template&id=3aef28ee&":
+/*!****************************************************************************!*\
+  !*** ./resources/js/components/Leagues.vue?vue&type=template&id=3aef28ee& ***!
+  \****************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Leagues_vue_vue_type_template_id_3aef28ee___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../node_modules/vue-loader/lib??vue-loader-options!./Leagues.vue?vue&type=template&id=3aef28ee& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/components/Leagues.vue?vue&type=template&id=3aef28ee&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Leagues_vue_vue_type_template_id_3aef28ee___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_Leagues_vue_vue_type_template_id_3aef28ee___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 
