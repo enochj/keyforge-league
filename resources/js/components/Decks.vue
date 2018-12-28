@@ -3,7 +3,7 @@
         <div class="alert alert-warning" v-if="alert.length > 0">
             {{alert}}
         </div>
-        <div class="panel panel-default" @added="goagain()" v-for="deck in decks">
+        <div class="panel panel-default" v-for="deck in decks">
             <div class="panel-heading">
             </div>
             <div class="panel-body">
