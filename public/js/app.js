@@ -36894,7 +36894,6 @@ var render = function() {
       "button",
       {
         staticClass: "btn btn-primary",
-        staticStyle: { "margin-bottom": "1rem" },
         on: {
           click: function($event) {
             _vm.addButton()
@@ -36907,7 +36906,7 @@ var render = function() {
     _vm.saved
       ? _c("div", { staticClass: "alert alert-success" }, [
           _c("strong", [_vm._v("Success!")]),
-          _vm._v(" Your deck has been added successfully.\n  ")
+          _vm._v(" My deck has been added.\n  ")
         ])
       : _vm._e(),
     _vm._v(" "),
@@ -49321,15 +49320,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!*********************************************!*\
   !*** ./resources/js/components/Leagues.vue ***!
   \*********************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Leagues_vue_vue_type_template_id_3aef28ee___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Leagues.vue?vue&type=template&id=3aef28ee& */ "./resources/js/components/Leagues.vue?vue&type=template&id=3aef28ee&");
 /* harmony import */ var _Leagues_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Leagues.vue?vue&type=script&lang=js& */ "./resources/js/components/Leagues.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Leagues_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Leagues_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -49359,7 +49357,7 @@ component.options.__file = "resources/js/components/Leagues.vue"
 /*!**********************************************************************!*\
   !*** ./resources/js/components/Leagues.vue?vue&type=script&lang=js& ***!
   \**********************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -49405,8 +49403,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\enochj\code\keyforge-league\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\enochj\code\keyforge-league\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\users\enochj\code\keyforge-league\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\users\enochj\code\keyforge-league\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
