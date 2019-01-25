@@ -15,6 +15,10 @@ class CreateDeckLeagueTable extends Migration
     {
         Schema::create('deck_league', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('deck_id');
+            $table->integer('league_id');
+            $table->integer('wins');
+            $table->integer('losses');
             $table->timestamps();
         });
     }

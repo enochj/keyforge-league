@@ -56,12 +56,18 @@ class LeagueController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\League  $league
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(League $league)
+    public function show(int $id)
     {
-        //
+        $player = Auth::user()->player()->first();
+        $my_decks = $player->decks;
+        $league = League::with('players.decks')->findOrFail($id);
+        return view('league.show')->with([
+            'league' => $league,
+            'my_decks' => $my_decks
+        ]);
     }
 
     /**
@@ -79,12 +85,13 @@ class LeagueController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\League  $league
+     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, League $league)
+    public function update(Request $request, int $id)
     {
-        //
+        return League::findOrFail($id)->decks()
+            ->syncWithoutDetaching([$request->input('id')]);
     }
 
     /**
@@ -127,5 +134,46 @@ class LeagueController extends Controller
             ], 422);
         }
         return League::findOrFail($request->id)->players()->attach($player);
+    }
+
+    public function decks(Request $request)
+    {
+        $player = Auth::user()->player()->first();
+        $league = League::with('decks')->findOrFail($request->id);
+        if ($league->players->contains($player)) {
+            return $league->decks;
+        }
+        return response()->json([
+            'status' => 'error',
+            'message' => 'Error',
+            'errors' => array('name' => array("I'm not in this league."))
+        ], 422);
+    }
+
+    public function removeDeck(Request $request)
+    {
+        $request->validate([
+            'id' => 'required',
+            'deck_id' => 'required'
+        ]);
+        $player = Auth::user()->player()->first();
+        $league = League::findOrFail($request->id);
+        $response_code = 404;
+        $status = 'error';
+        $message = 'User does not own this league.';
+        if ($league->owner_id == $player->id) {
+            $message =
+                'Deck could not be unassigned.';
+            if ($league->decks()
+                ->detach($request->deck_id)) {
+                    $response_code = 200;
+                    $status = 'success';
+                    $message = 'The operation was successful.';
+            }
+        }
+        return response()->json([
+            'status' => $status,
+            'message' => $message
+        ], $response_code);
     }
 }
