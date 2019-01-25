@@ -17,7 +17,10 @@ class League extends Model
 
     public function decks()
     {
-        return $this->belongsToMany('App\Deck')->withTimestamps();
+        return $this->belongsToMany('App\Deck')
+            ->as('membership')
+            ->withPivot('wins', 'losses')
+            ->withTimestamps();
     }
 
     public function find(Request $request)

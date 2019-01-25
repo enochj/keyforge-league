@@ -27,6 +27,8 @@ Route::get('/leagues/find-leagues', 'LeagueController@findLeagues')
     ->name('find-leagues');
 Route::post('/leagues/join-league', 'LeagueController@joinLeague')
     ->name('join-league');
+Route::get('/leagues/{id}/decks', 'LeagueController@decks')->name('league-decks');
+Route::delete('/leagues/decks', 'LeagueController@removeDeck')->name('league-decks-delete');
 
 Route::resources([
     'leagues' => 'LeagueController',

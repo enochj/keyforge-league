@@ -8,7 +8,7 @@
             </div>
             <div class="panel-body">
                 <div class="col-md-6">
-                    {{league.name }} | <a href="javascript:void(0);" id="remove" @click="removeLeague(league.id)">Remove</a>
+                    <button class="btn btn-secondary" @click="navLeague(league.id)">{{league.name }}</button> | <a href="javascript:void(0);" id="remove" @click="removeLeague(league.id)">Remove</a>
                 </div>
             </div>
             <div class="panel-footer">
@@ -78,6 +78,10 @@
                             }
                         });
                 }
+            },
+
+            navLeague(id) {
+                window.location.href = '/leagues/'+id;
             }
         }
     }
