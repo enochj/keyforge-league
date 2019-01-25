@@ -3,7 +3,7 @@
     <button class="btn btn-primary" @click="addButton()" style="margin-bottom:1rem">Add</button>
     <button class="btn btn-primary" @click="joinButton()" style="margin-bottom:1rem">Join</button>
     <div class="alert alert-success" v-if="saved">
-      <strong>Success!</strong> Your league has been added successfully.
+      <strong>Success!</strong> My league has been added.
     </div>
 
     <div v-if="showModal">
