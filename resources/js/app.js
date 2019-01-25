@@ -25,6 +25,8 @@ Vue.component('decks', require('./components/Decks.vue').default);
 Vue.component('deck-form', require('./components/DeckForm.vue').default);
 Vue.component('leagues', require('./components/Leagues.vue').default);
 Vue.component('league-form', require('./components/LeagueForm.vue').default);
+Vue.component('league-decks', require('./components/LeagueDecks.vue').default);
+Vue.component('league-deck-form', require('./components/LeagueDeckForm.vue').default);
 Vue.component('paginate', require('vuejs-paginate'));
 
 // Register a global custom directive called `v-focus`
