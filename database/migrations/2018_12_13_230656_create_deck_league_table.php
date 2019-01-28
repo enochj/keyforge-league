@@ -17,8 +17,8 @@ class CreateDeckLeagueTable extends Migration
             $table->increments('id');
             $table->integer('deck_id');
             $table->integer('league_id');
-            $table->integer('wins');
-            $table->integer('losses');
+            $table->integer('wins')->default(0);
+            $table->integer('losses')->default(0);
             $table->timestamps();
         });
     }
